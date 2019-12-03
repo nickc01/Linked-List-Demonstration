@@ -65,6 +65,8 @@ void SetColor(Color Background = Color::Black, Color Text = Color::BrightWhite);
 TextColor GetColor();
 void DrawTitle(string title, TextColor TitleColor = { Color::Black,Color::White }, TextColor SideColor = { Color::Black,Color::White });
 int GetNumber();
+void HideCursor();
+void ShowCursor();
 string GetString();
 //Gets an index within the linked list. Returns the index, the linked list at the current index, and the linked list at the previous index
 SelectedElement GetIndex(string message, bool afterLast = true, TextColor TitleSides = { Color::Black,Color::White }, TextColor Title = { Color::Black, Color::White });
@@ -190,6 +192,7 @@ SelectedElement GetIndex(string message,bool afterLast, TextColor TitleSides, Te
 {
 	if (CurrentList != nullptr)
 	{
+		HideCursor();
 		int index = 0;
 		int currentIndex = 0;
 		while (true)
@@ -198,25 +201,43 @@ SelectedElement GetIndex(string message,bool afterLast, TextColor TitleSides, Te
 			currentIndex = 0;
 			DrawTitle(message,Title,TitleSides);
 			LinkedList* current = CurrentList;
+			TextColor previousColor = GetColor();
+			SetColor(Color::Gray, Color::BrightWhite);
 			do
 			{
 				cout << '\n';
-				cout << "\t" << currentIndex << " : " << current->Value;
 				if (currentIndex == index)
+				{
+					cout << "--->  ";
+				}
+				else
+				{
+					cout << "      ";
+				}
+				cout << currentIndex << " : " << current->Value;
+				/*if (currentIndex == index)
 				{
 					cout << " <---\n";
 				}
 				else
 				{
 					cout << '\n';
-				}
+				}*/
 				currentIndex++;
 				current = current->Next;
 			} while (current != nullptr);
 
 			if (afterLast)
 			{
-				cout << "\t     ";
+				if (index == currentIndex)
+				{
+					cout << "\n--->  ";
+				}
+				else
+				{
+					cout << "\n      ";
+				}
+				/*cout << "\t     ";
 				if (index == currentIndex)
 				{
 					cout << "<---\n";
@@ -224,10 +245,11 @@ SelectedElement GetIndex(string message,bool afterLast, TextColor TitleSides, Te
 				else
 				{
 					cout << '\n';
-				}
+				}*/
 			}
-
+			SetColor(previousColor.Background,previousColor.Foreground);
 			char inputChar = _getch();
+			cout << '\n';
 			LinkedList* selection = CurrentList;
 			int selectionIndex = 0;
 			switch (inputChar)
@@ -259,6 +281,7 @@ SelectedElement GetIndex(string message,bool afterLast, TextColor TitleSides, Te
 				{
 					if (selectionIndex == index)
 					{
+						ShowCursor();
 						return {selection,selection->Previous,selection->Next, selectionIndex};
 					}
 					else
@@ -271,6 +294,7 @@ SelectedElement GetIndex(string message,bool afterLast, TextColor TitleSides, Te
 						selection = selection->Next;
 					}
 				} while (true);
+				ShowCursor();
 				if (afterLast && selectionIndex == currentIndex)
 				{
 					return {nullptr,selection,nullptr,selectionIndex};
@@ -486,6 +510,34 @@ void SetColor(Color Background, Color Text)
 TextColor GetColor()
 {
 	return CurrentColor;
+}
+
+void HideCursor()
+{
+	//Retrieve the handle to the console window
+	HANDLE consoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
+
+	CONSOLE_CURSOR_INFO info;
+
+	GetConsoleCursorInfo(consoleHandle, &info);
+
+	info.bVisible = false;
+
+	SetConsoleCursorInfo(consoleHandle, &info);
+}
+
+void ShowCursor()
+{
+	//Retrieve the handle to the console window
+	HANDLE consoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
+
+	CONSOLE_CURSOR_INFO info;
+
+	GetConsoleCursorInfo(consoleHandle, &info);
+
+	info.bVisible = true;
+
+	SetConsoleCursorInfo(consoleHandle, &info);
 }
 
 void DrawTitle(string title, TextColor TitleColor, TextColor SideColor)
