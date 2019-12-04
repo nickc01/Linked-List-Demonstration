@@ -5,7 +5,7 @@
 
 	The program only uses a linked list internally. No other list type, such as vector or arrays, are used.
 
-	A linked list works by using points to point to the next element in the list. For example, the first element will contain a value and a pointer to the next element.
+	A linked list works by using pointers to point to the next element in the list. For example, the first element will contain a value and a pointer to the next element.
 	The next element in turn, will have it's own value as well as a pointer to the next element, and so on. The one I used have both a pointer to the next element and a pointer to the previous element for iterating in both directions
 */
 
@@ -111,8 +111,8 @@ SelectedElement GetIndex(string message, bool afterLast = true, TextColor TitleS
 //Prints the entire linked list to the console
 void PrintLinkedList(LinkedList* list);
 
-//Swaps two strings with each other
-void SwapStrings(string& firstString, string& secondString);
+//Swaps two strings with each other by using their pointers
+void SwapStrings(string* firstString, string* secondString);
 
 
 //Clears the linked list and makes it empty
@@ -484,15 +484,15 @@ void PrintLinkedList(LinkedList* list)
 	}
 }
 
-//Swaps two string values with each other
-void SwapStrings(string& firstString, string& secondString)
+//Swaps two string values with each other by using their pointers
+void SwapStrings(string* firstString, string* secondString)
 {
 	//Store the first value in the temporary variable
-	string temp = firstString;
+	string temp = *firstString;
 	//Set the first value to the second
-	firstString = secondString;
+	(*firstString) = *secondString;
 	//Set the second value to the temporary
-	secondString = temp;
+	(*secondString) = temp;
 }
 
 //Clears the entire linked list
@@ -725,7 +725,7 @@ void Swap()
 		}
 
 		//Swap the values of the first and second elements
-		SwapStrings(first.Current->Value,second.Current->Value);
+		SwapStrings(&first.Current->Value,&second.Current->Value);
 		//Clear the screen
 		system("cls");
 	}
