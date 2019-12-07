@@ -1,6 +1,6 @@
 /*
 	Nicholas Cullen
-	12/4/19
+	12/7/19
 	Linked List Creator : A program used to create and manipulate a list.
 
 	The program only uses a linked list internally. No other list type, such as vector or arrays, are used.
